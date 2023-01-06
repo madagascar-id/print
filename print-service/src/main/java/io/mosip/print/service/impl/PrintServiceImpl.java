@@ -256,7 +256,9 @@ public class PrintServiceImpl implements PrintService {
             credentialSubject = getCrdentialSubject(credential);
             org.json.JSONObject credentialSubjectJson = new org.json.JSONObject(credentialSubject);
             org.json.JSONObject decryptedJson = decryptAttribute(credentialSubjectJson, encryptionPin, credential);
-            residentEmailId = decryptedJson.getString("email");
+            if (decryptedJson.has("email")) {
+                residentEmailId = decryptedJson.getString("email");
+            }
             if (!StringUtils.hasText(registrationId)) {
                 printLogger.info(decryptedJson.get("id").toString());
                 //registrationId = getRid(decryptedJson.get("id"));

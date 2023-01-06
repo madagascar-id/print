@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,6 +93,10 @@ public class NotificationUtil {
     private NotificationResponseDTO sendEmail(String emailId, HttpHeaders headers, MultiValueMap<Object, Object> emailMap) throws Exception {
         NotificationResponseDTO notifierResponse = new NotificationResponseDTO();
         try {
+            if (!StringUtils.hasText(emailId)) {
+                notifierResponse.setMessage("Email Id is empty.{}" + emailId);
+                return notifierResponse;
+            }
             emailMap.set("mailTo", emailId);
             HttpEntity<MultiValueMap<Object, Object>> httpEntity = new HttpEntity<>(emailMap, headers);
             ResponseWrapper<?> responseWrapper = (ResponseWrapper<?>) restApiClient.postApi(emailResourceUrl,
