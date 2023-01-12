@@ -94,7 +94,7 @@ public class NotificationUtil {
         NotificationResponseDTO notifierResponse = new NotificationResponseDTO();
         try {
             if (!StringUtils.hasText(emailId)) {
-                notifierResponse.setMessage("Email Id is empty.{}" + emailId);
+                notifierResponse.setMessage("No Email-Id present.{}" + emailId);
                 return notifierResponse;
             }
             emailMap.set("mailTo", emailId);

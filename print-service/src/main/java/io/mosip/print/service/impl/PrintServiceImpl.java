@@ -218,7 +218,8 @@ public class PrintServiceImpl implements PrintService {
             byte[] pdfbytes = getDocuments(decodedCredential,
                     eventModel.getEvent().getData().get("credentialType").toString(), ecryptionPin,
                     eventModel.getEvent().getTransactionId(), "UIN", isPasswordProtected, eventModel.getEvent().getId(),
-                    (eventModel.getEvent().getData().get("registrationId") == null ? null : eventModel.getEvent().getData().get("registrationId").toString())).get("uinPdf");
+                    (eventModel.getEvent().getData().get("registrationId") == null ? null : eventModel.getEvent().getData().get("registrationId").toString()),
+                    (eventModel.getEvent().getData().get("vid") == null ? null : eventModel.getEvent().getData().get("vid").toString())).get("uinPdf");
             isPrinted = true;
         } catch (Exception e) {
             printLogger.error(e.getMessage(), e);
@@ -237,7 +238,7 @@ public class PrintServiceImpl implements PrintService {
     private Map<String, byte[]> getDocuments(String credential, String credentialType, String encryptionPin,
                                              String requestId,
                                              String cardType,
-                                             boolean isPasswordProtected, String refId, String registrationId) {
+                                             boolean isPasswordProtected, String refId, String registrationId, String vid) {
         printLogger.debug("PrintServiceImpl::getDocuments()::entry");
         String credentialSubject;
         Map<String, byte[]> byteMap = new HashMap<>();
@@ -286,7 +287,10 @@ public class PrintServiceImpl implements PrintService {
                 }
                 setTemplateAttributes(decryptedJson.toString(), attributes);
                 attributes.put(IdType.UIN.toString(), uin);
-
+                if (vid != null)
+                    attributes.put(IdType.VID.toString(), vid);
+                else
+                    attributes.put(IdType.VID.toString(), "");
                 byte[] textFileByte = createTextFile(decryptedJson.toString());
                 byteMap.put(UIN_TEXT_FILE, textFileByte);
 
